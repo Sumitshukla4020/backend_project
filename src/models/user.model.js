@@ -2,7 +2,7 @@ import mongoose, {Schema} from "mongoose"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 
-const userSchema = new mongoose({
+const userSchema = new Schema({
     username: {
         type: String,
         required: true,
@@ -33,7 +33,7 @@ const userSchema = new mongoose({
     },
     watchHistory: [
         {
-            type: Schema.Type.UserId,
+            type: Schema.Types.ObjectId,
             ref: "Video"
 
         }
@@ -65,7 +65,7 @@ userSchema.methods.isPasswordCorrect= async function(password){
 userSchema.methods.generateAccessToken = function (){
     return jwt.sign({
         _id: this.id,
-        username: this.usernsme,
+        username: this.username,
         email: this.email,
         fullName: this.fullName
     }),
@@ -85,4 +85,4 @@ userSchema.methods.generateRefreshToken= function (){
 }
 
 
-export const User = new Schema.model("User", userSchema) 
+export const User = mongoose.model("User", userSchema) 
